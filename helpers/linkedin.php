@@ -1,7 +1,8 @@
 <?php
 /* LinkedIn for KISSCMS */
 class LinkedIn {
-	
+
+	public $name = "linkedin";
 	private $key;
 	private $secret;
 	private $token;
@@ -9,9 +10,9 @@ class LinkedIn {
 	private $me;
 	private $oauth;
 	private $cache;
-	
+
 	function  __construct() {
-		
+
 		$this->key = $GLOBALS['config']['linkedin']['key'];
 	 	$this->secret = $GLOBALS['config']['linkedin']['secret'];
 		$this->me = ( empty($_SESSION['access']['linkedin']['user_id']) ) ? false : $_SESSION['access']['linkedin']['user_id'];
@@ -20,8 +21,8 @@ class LinkedIn {
 		$this->oauth = "https://linkedin.com/api/oauth/2.0/";
 		$this->cache = $this->getCache();
 	}
-	
-	
+
+
 	  function getProfile($resource = "~") {
     $profile_url = $this->base_url . "/v1/people/" . $resource;
     $request = OAuthRequest::from_consumer_and_token($this->consumer, $this->access_token, "GET", $profile_url);
@@ -39,7 +40,7 @@ class LinkedIn {
     $response = $this->httpRequest($profile_url, $auth_header, "GET");
     return $response;
   }
-  
+
   function setStatus($status) {
     $status_url = $this->base_url . "/v1/people/~/current-status";
     echo "Setting status...\n";
@@ -54,7 +55,7 @@ class LinkedIn {
     $response = $this->httpRequest($profile_url, $auth_header, "GET");
     return $response;
   }
-  
+
   # Parameters should be a query string starting with "?"
   # Example search("?count=10&start=10&company=LinkedIn");
   function search($parameters) {
@@ -73,15 +74,15 @@ class LinkedIn {
     $response = $this->httpRequest($search_url, $auth_header, "GET");
     return $response;
   }
-  
-	
+
+
 	function getCache(){
 		// set up the parent container, the first time
 		if( !array_key_exists("linkedin", $_SESSION) ) $_SESSION['linkedin']= array();
 		return $_SESSION['linkedin'];
-		
+
 	}
-	
+
 	function setCache( $data ){
 		// save the data in the session
 		foreach( $data as $key => $result ){
@@ -90,9 +91,9 @@ class LinkedIn {
 		// update the local variable
 		$this->cache = $this->getCache();
 	}
-	
+
 	function deleteCache(){
 		unset($_SESSION['linkedin']);
 	}
-	
+
 }
